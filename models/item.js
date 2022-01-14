@@ -1,7 +1,37 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, Sequelize } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Item extends Model {
+    static init(sequelize, DataTypes) {
+      return super.init(
+        {
+          title: {
+            type: DataTypes.TEXT,
+            field: "title",
+          },
+          status: {
+            type: DataTypes.BOOLEAN,
+            field: "status",
+            defaultValue: 0,
+          },
+          createdAt: {
+            type: DataTypes.DATE,
+            field: "created_at",
+            defaultValue: Sequelize.now,
+          },
+          updatedAt: {
+            type: DataTypes.DATE,
+            field: "updated_at",
+            defaultValue: Sequelize.now,
+          },
+        },
+        {
+          sequelize,
+          modelName: "Item",
+          tableName: "items",
+        }
+      );
+    }
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,15 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Item.init(
-    {
-      title: DataTypes.TEXT,
-      status: DataTypes.BOOLEAN,
-    },
-    {
-      sequelize,
-      modelName: "Item",
-    }
-  );
+  Item.init(sequelize, DataTypes);
   return Item;
 };
