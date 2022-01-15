@@ -44,6 +44,23 @@ class ItemsController {
       });
     }
   }
+
+  async deleteItem(req, res) {
+    let id = req.params.id;
+    let item = await Item.findByPk(id);
+    if (item) {
+      await item.destroy();
+      res.status(200).send({
+        message: "Item deleted successfully!",
+        status: 200,
+      });
+    } else {
+      res.status(404).send({
+        message: "Item not found!",
+        status: 404,
+      });
+    }
+  }
 }
 
 module.exports = new ItemsController();
