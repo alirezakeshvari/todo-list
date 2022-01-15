@@ -4,7 +4,7 @@ This is a Todo list web application using Node.js, express and sequelize.
 
 ## Installation
 
-- First config your _database_ in **config/config.js** file.
+- First config your _database_ in **config/config.json** file.
 
 - Then run commands below
 
