@@ -26,6 +26,24 @@ class ItemsController {
       item: newItem,
     });
   }
+
+  async changeItemStatus(req, res) {
+    let id = req.params.id;
+    let item = await Item.findByPk(id);
+    if (item) {
+      item.status = !item.status;
+      item.save();
+      res.status(200).send({
+        message: "Item status changed successfully",
+        status: 200,
+      });
+    } else {
+      res.status(404).send({
+        message: "Item not found",
+        status: 404,
+      });
+    }
+  }
 }
 
 module.exports = new ItemsController();
