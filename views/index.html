@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      type="text/javascript"
+    ></script>
+    <title>Todo List</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="header">
+          <h1>Todo List</h1>
+        </div>
+        <div id="items" class="content"></div>
+        <div class="item-form">
+          <input type="text" id="title" placeholder="Enter Title here" />
+          <button onclick="createItem()">Add</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onload = () => {
+        getItemsList();
+      };
+
+      function getItemsList() {
+        let items = [];
+        $.ajax("/api/items", {
+          type: "GET",
+          dataType: "json",
+          success: (res) => {
+            if (res.status == 200) {
+              $("#items div").remove();
+              items = res.items;
+              items.map((item) => {
+                $("#items").append(`
+                    <div class="item">
+                        <input onchange="changeStatus(${
+                          item.id
+                        })" type="checkbox" ${
+                  item.status == true ? "checked" : ""
+                }/>
+                        <label for="">${item.title}</label>
+                        <a href="#" onclick="deleteItem(${item.id})">delete</a>
+                    </div>
+                  `);
+              });
+            } else {
+              alert("Can not get list of items");
+            }
+          },
+        });
+      }
+
+      function changeStatus(id) {
+        $.ajax("/api/items/" + id, {
+          type: "PUT",
+          dataType: "json",
+          success: (res) => {
+            console.log(res.message);
+          },
+        });
+      }
+
+      function deleteItem(id) {
+        $.ajax("/api/items/" + id, {
+          type: "DELETE",
+          dataType: "json",
+          success: (res) => {
+            getItemsList();
+          },
+        });
+      }
+
+      function createItem() {
+        let data = {
+          item: {
+            title: document.getElementById("title").value,
+          },
+        };
+        $.ajax("/api/items", {
+          type: "POST",
+          dataType: "json",
+          data: data,
+          success: (res) => {
+            getItemsList();
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

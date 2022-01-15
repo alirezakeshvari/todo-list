@@ -1,6 +1,11 @@
 const Item = require("../models").Item;
+const path = require("path");
 
 class ItemsController {
+  index(req, res) {
+    res.sendFile(path.join(__dirname, "../views/index.html"));
+  }
+
   async getItemsList(req, res) {
     let items = await Item.findAll();
     if (items) {
